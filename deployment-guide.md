@@ -46,3 +46,45 @@ or export SINGLE_POD_NAME=$(kubectl get pod -l app=django-k8s-deployment -o NAME
 
 kubectl exec -it $SINGLE_POD_NAME -- bash /app/migrate.sh
 ```
+
+Add in a rollout strategy
+'imagePullPolicy: Always
+
+### Four ways to trigger a deployment rollout (aka update the running pods)
+
+```
+kubectl rollout restart deployment/django-k8s-deployment
+```
+
+- Image update
+
+```
+kubectl set image deployment/django-k8s-deployment  django-k8s-web=registry.digitalocean.com/kt-k8s/django-k8s-web:latest
+```
+
+- Update an environment variable (within Deployment yaml)
+
+```
+env:
+  - name: Version
+    value "abc123
+  - name: PORT
+    value: "8002"
+```
+
+-- Deployment yaml file update
+
+```
+image: registry.digitalocean.com/kt-k8s/django-k8s-web:latest
+```
+
+to 
+```
+image: registry.digitalocean.com/kt-k8s/django-k8s-web:v1
+```
+
+Keep in mind you'll need to change `latest` to any new tag(s) you might have (not just v1)
+
+```
+kubectl apply -f k8s/apps/django-k8s-deployment.yaml
+```
