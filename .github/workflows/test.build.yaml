@@ -16,7 +16,7 @@ jobs:
     environment:
       name: testing
     env:
-      DJANGO_SECRET_KEY: ${{secrets.DJANGO_SECRET_KEY}}
+      DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
       POSTGRES_PASSWORD: x1XlM-juH5LWJseJS113iQtfXL9Zf8TBBo3fXRuRh6E
       POSTGRES_DB: dockerkubes
     defaults:
@@ -63,3 +63,19 @@ jobs:
     steps:
       - name: pulling get repo
         uses: actions/checkout@v2
+      - name: install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+      - name: login to DO container registry with short-lived creds
+        run: doctl registry login --expiry-seconds 1200
+      - name: build container image
+        working-directory: .
+        run: |
+          docker build -f Dockerfile \
+            -t registry.digitalocean.com/kt-k8s/django-k8s-web:latest \
+            -t registry.digitalocean.com/kt-k8s/django-k8s-web:${GITHUB_SHA::7} \
+            .      
+      - name: push image
+        run: |
+          docker push registry.digitalocean.com/kt-k8s/django-k8s-web --all-tags
