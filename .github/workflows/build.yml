@@ -11,6 +11,9 @@ on:
       - "master"
 
 jobs:
+  test_django:
+    uses: kkthecompguy/django-K8s/.github/workflows/test-django.yaml@master
+
   docker_build:
     runs-on: ubuntu-latest
     environment:

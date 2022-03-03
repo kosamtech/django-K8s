@@ -3,12 +3,6 @@ name: Django CI/CD & Postgres
 on: 
   workflow_call:
   workflow_dispatch:
-  push:
-    branches: 
-      - "master"
-  pull_request:
-    branches:
-      - "master"
 
 jobs:
   test:
@@ -17,6 +11,8 @@ jobs:
       name: testing
     env:
       DJANGO_SECRET_KEY: ${{secrets.DJANGO_SECRET_KEY}}
+      POSTGRES_PASSWORD: x1XlM-juH5LWJseJS113iQtfXL9Zf8TBBo3fXRuRh6E
+      POSTGRES_DB: dockerkubes
     defaults:
       run:
         working-directory: .
@@ -25,8 +21,8 @@ jobs:
       postgres_db:
         image: postgres:14
         env:
-          POSTGRES_PASSWORD: ${{secrets.POSTGRES_PASSWORD}}
-          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+          POSTGRES_PASSWORD: ${{ env.POSTGRES_PASSWORD }}
+          POSTGRES_DB: ${{ env.POSTGRES_DB }}
         ports:
           - 5432:5432
         options: >-
