@@ -1,14 +1,8 @@
-name: Django CI/CD
+name: Django CI/CD & Postgres
 
 on: 
   workflow_call:
   workflow_dispatch:
-  push:
-    branches: 
-      - "master"
-  pull_request:
-    branches:
-      - "master"
 
 jobs:
   test:
@@ -17,6 +11,9 @@ jobs:
       name: testing
     env:
       DJANGO_SECRET_KEY: ${{secrets.DJANGO_SECRET_KEY}}
+    defaults:
+      run:
+        working-directory: .
 
     services:
       postgres_db:
