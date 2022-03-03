@@ -85,10 +85,11 @@ WSGI_APPLICATION = 'djangokubes.wsgi.application'
 
 DB_USERNAME = config("POSTGRES_USER", default="")
 DB_PASSWORD = config("POSTGRES_PASSWORD", default="")
-DB_DATABASE = config("POSTGRES_DB", default="")
+DB_DATABASE = config("POSTGRES_DB", default="db.sqlite3")
 DB_HOST = config("POSTGRES_HOST", default="")
 DB_PORT = config("POSTGRES_PORT", default="")
 DB_IGNORE_SSL = config("DB_IGNORE_SSL", default=False, cast=bool)
+DB_ENGINE = config("DATABASE_ENGINE", default="django.db.backends.sqlite3")
 
 DB_IS_AVAIL = all([
     DB_USERNAME,
@@ -100,7 +101,7 @@ DB_IS_AVAIL = all([
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql",
+        "ENGINE": DB_ENGINE,
         "NAME": DB_DATABASE,
         "USER": DB_USERNAME,
         "PASSWORD": DB_PASSWORD,
