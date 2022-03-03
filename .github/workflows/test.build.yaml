@@ -1,11 +1,17 @@
-name: Django CI/CD & Postgres
+name: Test Build Docker CICD
 
 on: 
   workflow_call:
   workflow_dispatch:
+  push:
+    branches: 
+      - "master"
+  pull_request:
+    branches:
+      - "master"
 
 jobs:
-  test:
+  test_django:
     runs-on: ubuntu-latest
     environment:
       name: testing
@@ -44,3 +50,16 @@ jobs:
         run: pip install -r requirements.txt
       - name: run test
         run: python manage.py test
+
+
+  docker_build:
+    runs-on: ubuntu-latest
+    needs: [test_django]
+    environment:
+      name: testing
+    env:
+      DJANGO_SECRET_KEY: ${{secrets.DJANGO_SECRET_KEY}}
+    
+    steps:
+      - name: pulling get repo
+        uses: actions/checkout@v2
