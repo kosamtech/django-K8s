@@ -27,7 +27,8 @@ SECRET_KEY = config('DJANGO_SECRET_KEY', default="testsecret")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOST = config('ALLOWED_HOST', default="localhost")
+ALLOWED_HOSTS = ['127.0.0.1', ALLOWED_HOST]
 
 
 # Application definition
@@ -87,6 +88,8 @@ DB_PASSWORD = config("POSTGRES_PASSWORD", default="")
 DB_DATABASE = config("POSTGRES_DB", default="")
 DB_HOST = config("POSTGRES_HOST", default="")
 DB_PORT = config("POSTGRES_PORT", default="")
+DB_IGNORE_SSL = config("DB_IGNORE_SSL", default=False, cast=bool)
+
 DB_IS_AVAIL = all([
     DB_USERNAME,
     DB_PASSWORD,
@@ -105,6 +108,11 @@ DATABASES = {
         "PORT": DB_PORT,
     }
 }
+
+if not DB_IGNORE_SSL:
+    DATABASES['default']['OPTIONS'] = {
+        "sslmode": "require"
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators

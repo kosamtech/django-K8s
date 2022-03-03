@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fastapi-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: fastapi-deployment
+  template:
+    metadata:
+      labels:
+        app: fastapi-deployment 
+    spec:
+      containers:
+        - name: fastapi
+          image: codingforentrepreneurs/iac-python:latest
+          env:
+            - name: PORT
+              value: "8000"
+            - name:   
+          ports:
+            - containerPort: 8000
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: fastapi-service
+spec:
+  type: LoadBalancer
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 8000
+  selector:
+    app: fastapi-deployment
