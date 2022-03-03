@@ -91,5 +91,5 @@ jobs:
           kubectl rollout status deployment/django-k8s-deployment
       - name: post build (migrate)
         run: |
-          export SINGLE_POD_NAME=$(kubectl get pod -l app=django-k8s-deployment -o jsonpath={.items[0].metadata.name}
+          export SINGLE_POD_NAME=$(kubectl get pod -l app=django-k8s-deployment -o jsonpath={.items[0].metadata.name})
           kubectl exec -it $SINGLE_POD_NAME -- bash /app/migrate.sh
