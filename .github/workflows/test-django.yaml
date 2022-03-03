@@ -3,6 +3,12 @@ name: Django CI/CD & Postgres
 on: 
   workflow_call:
   workflow_dispatch:
+  push:
+    branches: 
+      - "master"
+  pull_request:
+    branches:
+      - "master"
 
 jobs:
   test:
