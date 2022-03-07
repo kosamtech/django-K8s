@@ -75,7 +75,7 @@ jobs:
         run: |
           docker build -f Dockerfile \
             -t registry.digitalocean.com/kt-k8s/django-k8s-web:latest \
-            -t registry.digitalocean.com/kt-k8s/django-k8s-web:${GITHUB_SHA::7} \
+            -t registry.digitalocean.com/kt-k8s/django-k8s-web:${GITHUB_SHA::7}-${GITHUB_RUN_ID::5} \
             .      
       - name: push image
         run: |
@@ -86,7 +86,7 @@ jobs:
       - name: update deployment secrets
         run: |
           cat << EOF >> ./.env.prod
-          DEBUG=True
+          DEBUG=False
           DJANGO_SUPERUSER_USERNAME=${{ secrets.DJANGO_SUPERUSER_USERNAME }}
           DJANGO_SUPERUSER_PASSWORD=${{ secrets.DJANGO_SUPERUSER_PASSWORD }}
           DJANGO_SUPERUSER_EMAIL=${{ secrets.DJANGO_SUPERUSER_EMAIL }}
@@ -107,7 +107,7 @@ jobs:
           kubectl create secret generic django-k8s-prod-env --from-env-file=./.env.prod
       - name: update deployment image
         run: |
-          kubectl set image deployment/django-k8s-deployment  django-k8s-web=registry.digitalocean.com/kt-k8s/django-k8s-web:${GITHUB_SHA::7}
+          kubectl set image deployment/django-k8s-deployment  django-k8s-web=registry.digitalocean.com/kt-k8s/django-k8s-web:${GITHUB_SHA::7}-${GITHUB_RUN_ID::5}
       - name: wait for rollout to finish
         run: |
           kubectl rollout status deployment/django-k8s-deployment
