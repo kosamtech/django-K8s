@@ -1,9 +1,8 @@
-version: '3'
 services:
   web:
     depends_on:
       - postgres_db
-    build: 
+    build:
       context: .
       dockerfile: Dockerfile
     image: djangokubes:v1
@@ -27,14 +26,14 @@ services:
       - POSTGRES_USER=kosamtech
       - POSTGRES_DB=dockerkubes
     ports:
-      - 5433:5432
+      - 5434:5432
     volumes:
       - postgres_data:/var/lib/postgresql/data/
   redis_db:
     image: redis
     restart: always
     ports:
-      - 6388:6379    
+      - 6388:6379
     volumes:
       - redis_data:/data
     entrypoint: redis-server --appendonly yes --port 6388
